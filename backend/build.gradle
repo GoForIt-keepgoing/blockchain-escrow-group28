@@ -25,11 +25,20 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 web3j {
     generatedPackageName = 'com.wetech.demo.web3j.contracts.{0}'
     generatedFilesBaseDir = 'src'
+}
+
+solidity {
+    version = '0.8.20'
+    evmVersion = org.web3j.solidity.gradle.plugin.EVMVersion.PARIS
+    // These contracts have no npm imports; no Node installation is needed.
+    resolvePackages = false
 }
 
 sourceSets {
@@ -42,6 +51,10 @@ sourceSets {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 
 // Check if the task exists before setting dependencies

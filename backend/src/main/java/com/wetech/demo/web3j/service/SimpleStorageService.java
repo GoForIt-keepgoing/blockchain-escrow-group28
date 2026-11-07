@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.web3j.crypto.Credentials;
+import org.web3j.tx.TransactionManager;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.gas.ContractGasProvider;
@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 public class SimpleStorageService {
 
     private final Web3j web3j;
-    private final Credentials credentials;
+    private final TransactionManager transactionManager;
     private final ContractGasProvider gasProvider;
     
     private SimpleStorage contract;
@@ -38,7 +38,7 @@ public class SimpleStorageService {
      */
     public CompletableFuture<String> deployContract() {
         log.info("Deploying SimpleStorage contract...");
-        return SimpleStorage.deploy(web3j, credentials, gasProvider)
+        return SimpleStorage.deploy(web3j, transactionManager, gasProvider)
                 .sendAsync()
                 .thenApply(contract -> {
                     this.contract = contract;
@@ -54,7 +54,7 @@ public class SimpleStorageService {
      */
     public void loadContract(String contractAddress) {
         log.info("Loading SimpleStorage contract from address: {}", contractAddress);
-        this.contract = SimpleStorage.load(contractAddress, web3j, credentials, gasProvider);
+        this.contract = SimpleStorage.load(contractAddress, web3j, transactionManager, gasProvider);
         this.contractAddress = contractAddress;
     }
 
